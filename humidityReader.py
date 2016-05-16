@@ -7,5 +7,6 @@ response = requests.get("http://" + arduinoName + "/")
 
 assert response.status_code == 200
 
-for repo in response.json():
-    print '[{}] {}'.format(repo['language'], repo['name'])
+resp = response.json()
+
+humidity = resp['variables']['humidity']
