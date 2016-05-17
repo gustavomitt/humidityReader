@@ -8,8 +8,10 @@ ENV GOOGLE_APPLICATION_CREDENTIALS /home/GardenControlArduino-75b43a070e42.json
 RUN apt-get -y update
 
 # Install packages
-RUN apt-get install -y git \
-       && apt-get install -y python \
+#RUN apt-get install -y git \
+#       && apt-get install -y python \
+#       && apt-get install -y python-pip
+RUN apt-get install -y python \
        && apt-get install -y python-pip
 
 # Install python modules
