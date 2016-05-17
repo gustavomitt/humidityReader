@@ -17,6 +17,6 @@ RUN pip install requests \
        && pip install --upgrade google-api-python-client
 
 # Get the program
-RUN git clone https://github.com/gustavomitt/humidityReader.git
+# RUN git clone https://github.com/gustavomitt/humidityReader.git
 
 CMD python /humidityReader/humidityReader.py
