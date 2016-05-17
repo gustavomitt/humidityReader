@@ -21,4 +21,6 @@ RUN pip install requests \
 # Get the program
 # RUN git clone https://github.com/gustavomitt/humidityReader.git
 
+ADD humidityReader /home
+
 CMD python /humidityReader/humidityReader.py
