@@ -23,4 +23,4 @@ RUN pip install requests \
 
 ADD humidityReader /home
 
-CMD python /humidityReader/humidityReader.py
+CMD python /home/humidityReader.py
