@@ -31,7 +31,7 @@ humidity = resp['variables']['humidity']
 # Send the humidity value to message queue
 client = create_pubsub_client()
 
-message1 = base64.b64encode(humidity)
+message1 = humidity
 
 body = {
     'messages': [
