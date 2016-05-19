@@ -2,7 +2,7 @@ FROM ubuntu:xenial
 
 # Sets the Application Default Credentials
 
-ENV GOOGLE_APPLICATION_CREDENTIALS /home/GardenControlArduino-75b43a070e42.json
+ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
 
 # Update base system repos
 RUN apt-get -y update
