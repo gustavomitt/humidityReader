@@ -20,13 +20,17 @@ def create_pubsub_client(http=None):
 
 arduinoName = "WIZnet0EFE40"
 
-response = requests.get("http://" + arduinoName + "/")
+try:
+    response = requests.get("http://" + arduinoName + "/")
+except requests.exceptions.RequestException as e:
+    print "HTTP request error: " + e
+    sys.exit()
 
-assert response.status_code == 200
 
 resp = response.json()
 
 humidity = resp['variables']['humidity']
+print "Collected humidity value: " + str(humidity)
 
 # Send the humidity value to message queue
 client = create_pubsub_client()
