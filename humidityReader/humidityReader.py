@@ -6,10 +6,15 @@ import base64
 from apiclient import discovery
 from oauth2client import client as oauth2client
 
+DEBUG = True
+
 PUBSUB_SCOPES = ['https://www.googleapis.com/auth/pubsub']
 
 def create_pubsub_client(http=None):
-    credentials = oauth2client.GoogleCredentials.get_application_default()
+    try:
+        credentials = oauth2client.GoogleCredentials.get_application_default()
+    except (ApplicationDefaultCredentialsError, ValueError) as error:
+        print "Load credentials failed with error: " + error
     if credentials.create_scoped_required():
         credentials = credentials.create_scoped(PUBSUB_SCOPES)
     if not http:
@@ -23,14 +28,16 @@ arduinoName = "WIZnet0EFE40"
 try:
     response = requests.get("http://" + arduinoName + "/")
 except requests.exceptions.RequestException as e:
-    print "HTTP request error: " + e
+    if DEBUG :
+        print "HTTP request error: " + e
     sys.exit()
 
 
 resp = response.json()
 
 humidity = resp['variables']['humidity']
-print "Collected humidity value: " + str(humidity)
+if DEBUG:
+    print "Collected humidity value: " + str(humidity)
 
 # Send the humidity value to message queue
 client = create_pubsub_client()
