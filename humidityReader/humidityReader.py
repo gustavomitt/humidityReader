@@ -29,7 +29,7 @@ try:
     response = requests.get("http://" + arduinoName + "/")
 except requests.exceptions.RequestException as e:
     if DEBUG :
-        print "HTTP request error: " + e
+        print e
     sys.exit()
 
 

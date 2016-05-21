@@ -23,4 +23,7 @@ RUN pip install requests \
 
 ADD humidityReader /home
 
-CMD python /home/humidityReader.py
+CMD python /home/humidityReader.py~
+
+# run command:
+# docker run -it --volume=/home/gmmitt/dockervolume/:/home/dockervolume:ro gustavomitt/humidityreader:latest
