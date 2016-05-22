@@ -16,4 +16,4 @@ CMD python /home/humidityReader.py
 # build command:
 # docker build -t gustavomitt/humidityreader:latest .
 # run command:
-# docker run -it --volume=/home/gmmitt/dockervolume/:/home/dockervolume:ro gustavomitt/humidityreader:latest
+# docker run -it --volume=/home/pi/dockervolume/:/home/dockervolume:ro gustavomitt/humidityreader:latest
