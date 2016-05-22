@@ -23,7 +23,7 @@ def create_pubsub_client(http=None):
 
     return discovery.build('pubsub', 'v1', http=http)
 
-arduinoName = "WIZnet0EFE40"
+arduinoName = "arduino1"
 
 try:
     response = requests.get("http://" + arduinoName + "/")
