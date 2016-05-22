@@ -1,18 +1,18 @@
-FROM ubuntu:xenial
+FROM hypriot/rpi-python
 
 # Sets the Application Default Credentials
 
 ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
 
 # Update base system repos
-RUN apt-get -y update
+# RUN apt-get -y update
 
 # Install packages
 #RUN apt-get install -y git \
 #       && apt-get install -y python \
 #       && apt-get install -y python-pip
-RUN apt-get install -y python \
-       && apt-get install -y python-pip
+#RUN apt-get install -y python \
+#       && apt-get install -y python-pip
 
 # Install python modules
 RUN pip install requests \
