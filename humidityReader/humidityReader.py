@@ -32,7 +32,7 @@ try:
 except requests.exceptions.RequestException as e:
     if DEBUG :
         print e
-#    sys.exit()
+##    sys.exit()
 
 
 resp = response.json()
