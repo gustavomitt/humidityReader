@@ -5,9 +5,9 @@ FROM hypriot/rpi-python
 ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
 
 # Install python modules
-RUN pip install requests \
-       && pip install google-api-python-client \
-       && pip install cronus
+RUN pip install requests
+RUN pip install google-api-python-client
+RUN pip install cronus
 
 
 ADD humidityReader /home
