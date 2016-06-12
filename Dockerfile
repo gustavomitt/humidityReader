@@ -6,7 +6,7 @@ ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43
 
 # Install python modules
 RUN pip install requests \
-       && pip install --upgrade google-api-python-client \
+       && pip install google-api-python-client \
        && pip install cronus
 
 
