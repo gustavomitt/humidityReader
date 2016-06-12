@@ -3,6 +3,7 @@ import requests
 import httplib2
 import base64
 import datetime
+import os
 
 from apiclient import discovery
 from oauth2client import client as oauth2client
@@ -24,14 +25,14 @@ def create_pubsub_client(http=None):
 
     return discovery.build('pubsub', 'v1', http=http)
 
-arduinoName = "arduino1"
+arduinoIP = os.environ['arduino1']
 
 try:
-    response = requests.get("http://" + arduinoName + "/")
+    response = requests.get("http://" + arduinoIP + "/")
 except requests.exceptions.RequestException as e:
     if DEBUG :
         print e
-    sys.exit()
+#    sys.exit()
 
 
 resp = response.json()
