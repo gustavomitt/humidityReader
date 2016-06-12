@@ -18,7 +18,8 @@ RUN pip install cronus
 
 ADD humidityReader /home
 
-CMD python /home/humidityReader.py
+# CMD python /home/humidityReader.py
+CMD /bin/bash
 
 # build command:
 # docker build -t gustavomitt/humidityreader:latest .
