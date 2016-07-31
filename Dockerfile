@@ -2,7 +2,7 @@ FROM resin/rpi-raspbian
 
 # Sets the Application Default Credentials
 
-ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
+# ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
 
 # Install python and pip
 RUN apt-get update
