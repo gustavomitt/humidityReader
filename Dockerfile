@@ -21,6 +21,7 @@ RUN cd /home
 RUN git clone https://github.com/gustavomitt/humidityReader.git
 
 # Create Credentials
+RUN chmod a+x /home/humidityReader/createCredentials.sh
 RUN /home/humidityReader/createCredentials.sh
 
 
