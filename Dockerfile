@@ -4,10 +4,11 @@ FROM resin/rpi-raspbian
 
 # ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
 
-# Install python and pip
+# Install python, pip and git
 RUN apt-get update
-RUN apt-get install python2.7
-RUN apt-get install python-pip
+RUN apt-get -y install python2.7
+RUN apt-get -y install python-pip
+RUN apt-get -y install git
 
 
 # Install python modules
@@ -15,11 +16,18 @@ RUN apt-get install python-pip
 RUN pip install google-api-python-client
 RUN pip install cronus
 
+# Clone Rep
+RUN cd /home
+RUN git clone https://github.com/gustavomitt/humidityReader.git
 
-ADD humidityReader /home
+# Create Credentials
+RUN bash /home/humidityReader/createCredentials.sh
 
-# CMD python /home/humidityReader.py
-CMD /bin/bash
+
+# ADD humidityReader /home
+
+CMD python /home/humidityReader/humidityReader/humidityReader.py
+# CMD /bin/bash
 
 # build command:
 # docker build -t gustavomitt/humidityreader:latest .

@@ -13,40 +13,38 @@ from oauth2client import client as oauth2client
 DEBUG = True
 PUBSUB_SCOPES = ['https://www.googleapis.com/auth/pubsub']
 arduinoIP = os.environ['arduino1']
- = os.environ['arduino1']
-
-def createCredentials():
 
 
 @timeout(20)
 def create_pubsub_client(http=None):
     try:
         credentials = oauth2client.GoogleCredentials.get_application_default()
-    except (ApplicationDefaultCredentialsError, ValueError) as error:
-        if DEBUG: print "Load credentials failed with error: " + error
+    except (oauth2client.ApplicationDefaultCredentialsError, ValueError) as error:
+        if DEBUG: 
+            print "Load credentials failed with error: "
+            print error
     if credentials.create_scoped_required():
         credentials = credentials.create_scoped(PUBSUB_SCOPES)
     if not http:
         http = httplib2.Http()
     credentials.authorize(http)
-
     return discovery.build('pubsub', 'v1', http=http)
 
 @timeout(10)
-def getSensorValue(self,IP):
+def getSensorValue(IP):
     try:
         if DEBUG: print "Sending http request to arduino"
-        response = requests.get("http://" + IP + "/")
+        response = requests.get("http://" + arduinoIP + "/")
     except requests.exceptions.RequestException as e:
         if DEBUG : print e
-        return Null
+        return None
     else:
-        if DEGUG: print response.json()
+        if DEBUG: print response.json()
         return response
     ##    sys.exit()
 
 @timeout(3)
-def formatMessage(self,arduinoResponse):
+def formatMessage(arduinoResponse):
     resp = arduinoResponse.json()
     humidity = resp['variables']['humidity']
     if DEBUG: print "Collected humidity value: " + str(humidity)
@@ -59,7 +57,7 @@ def formatMessage(self,arduinoResponse):
     return body
 
 @timeout(10)
-def writeMessageToMQ(self,message,client):
+def writeMessageToMQ(message,client):
     # Send the humidity value to message queue
     resp = client.projects().topics().publish(
         topic='projects/gardencontrolarduino/topics/humidity', body=message).execute()
