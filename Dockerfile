@@ -26,8 +26,8 @@ RUN /home/humidityReader/createCredentials.sh
 
 # ADD humidityReader /home
 
-CMD python /home/humidityReader/humidityReader/humidityReader.py
-# CMD /bin/bash
+#CMD python /home/humidityReader/humidityReader/humidityReader.py
+CMD /bin/bash
 
 # build command:
 # docker build -t gustavomitt/humidityreader:latest .
