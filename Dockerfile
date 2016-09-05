@@ -20,7 +20,6 @@ RUN pip install cronus
 RUN git clone https://github.com/gustavomitt/humidityReader.git /home/humidityReader
 
 # Create Credentials
-RUN sleep 30
 RUN chmod a+x /home/humidityReader/createCredentials.sh
 RUN /home/humidityReader/createCredentials.sh
 

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#while [ -v $type ] ; do
+#	echo "variavel: $type"
+#    echo "still waiting for environmental variables"
+#    sleep 1
+#done
+
+sleep 60
+
 cd /home
 
 > GardenControlArduino-75b43a070e42.json
