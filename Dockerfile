@@ -17,8 +17,7 @@ RUN pip install google-api-python-client
 RUN pip install cronus
 
 # Clone Rep
-RUN cd /home
-RUN git clone https://github.com/gustavomitt/humidityReader.git
+RUN git clone https://github.com/gustavomitt/humidityReader.git /home/humidityReader
 
 # Create Credentials
 RUN chmod a+x /home/humidityReader/createCredentials.sh
