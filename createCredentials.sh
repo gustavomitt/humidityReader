@@ -24,3 +24,5 @@ echo '  "token_uri": "'$token_uri'",' >> GardenControlArduino-75b43a070e42.json
 echo '  "auth_provider_x509_cert_url": "'$auth_provider_x509_cert_url'",' >> GardenControlArduino-75b43a070e42.json
 echo '  "client_x509_cert_url": "'$client_x509_cert_url'"' >> GardenControlArduino-75b43a070e42.json
 echo '}' >> GardenControlArduino-75b43a070e42.json
+
+python /home/humidityReader/humidityReader/humidityReader.py

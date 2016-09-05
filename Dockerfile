@@ -21,13 +21,14 @@ RUN git clone https://github.com/gustavomitt/humidityReader.git /home/humidityRe
 
 # Create Credentials
 RUN chmod a+x /home/humidityReader/createCredentials.sh
-RUN /home/humidityReader/createCredentials.sh
+#RUN /home/humidityReader/createCredentials.sh
 
 
 # ADD humidityReader /home
 
+CMD /home/humidityReader/createCredentials.sh
 #CMD python /home/humidityReader/humidityReader/humidityReader.py
-CMD /bin/bash
+#CMD /bin/bash
 
 # build command:
 # docker build -t gustavomitt/humidityreader:latest .
