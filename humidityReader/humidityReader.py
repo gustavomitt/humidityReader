@@ -7,9 +7,6 @@ import os
 import cronus.beat as beat
 from cronus.timeout import timeout,TimeoutError 
 
-from apiclient import discovery
-from oauth2client import client as oauth2client
-
 import certifi
 import paho.mqtt.client as paho
 

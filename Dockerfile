@@ -11,14 +11,14 @@ RUN pip install -r ./requirements.txt
 RUN git clone https://github.com/gustavomitt/humidityReader.git /home/humidityReader
 
 # Create Credentials
-RUN chmod a+x /home/humidityReader/createCredentials.sh
+#RUN chmod a+x /home/humidityReader/createCredentials.sh
 #RUN /home/humidityReader/createCredentials.sh
 
 
 # ADD humidityReader /home
 
-CMD /home/humidityReader/createCredentials.sh
-#CMD python /home/humidityReader/humidityReader/humidityReader.py
+#CMD /home/humidityReader/createCredentials.sh
+CMD python /home/humidityReader/humidityReader/humidityReader.py
 #CMD /bin/bash
 
 # build command:

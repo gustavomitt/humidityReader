@@ -1,3 +1,7 @@
 paho-mqtt
 certifi
 cronus
+requests
+httplib2
+base64
+datetime
