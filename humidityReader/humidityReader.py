@@ -10,25 +10,13 @@ from cronus.timeout import timeout,TimeoutError
 from apiclient import discovery
 from oauth2client import client as oauth2client
 
+import certifi
+import paho.mqtt.client as paho
+
 DEBUG = True
-PUBSUB_SCOPES = ['https://www.googleapis.com/auth/pubsub']
 arduinoIP = os.environ['arduino1']
 
 
-@timeout(20)
-def create_pubsub_client(http=None):
-    try:
-        credentials = oauth2client.GoogleCredentials.get_application_default()
-    except (oauth2client.ApplicationDefaultCredentialsError, ValueError) as error:
-        if DEBUG: 
-            print "Load credentials failed with error: "
-            print error
-    if credentials.create_scoped_required():
-        credentials = credentials.create_scoped(PUBSUB_SCOPES)
-    if not http:
-        http = httplib2.Http()
-    credentials.authorize(http)
-    return discovery.build('pubsub', 'v1', http=http)
 
 @timeout(10)
 def getSensorValue(IP):
@@ -63,30 +51,48 @@ def writeMessageToMQ(message,client):
         topic='projects/gardencontrolarduino/topics/humidity', body=message).execute()
 
 
-if __name__ == "__main__":
-    try:
-        client = create_pubsub_client()
-    except TimeoutError:
-        if DEBUG: print "Timeout creating pubsub client"
-    else:
-        beat.set_rate(0.0333333333)
-        while beat.true:
-            try:
-                response = getSensorValue(arduinoIP)
-            except TimeoutError:
-                if DEBUG: print "Timeout reading sensor value API"
-            else:
-                try:
-                    body = formatMessage(response)
-                except TimeoutError:
-                    if DEBUG: print "Timeout formating message"
-                else:
-                    try:
-                        writeMessageToMQ(body,client)
-                    except TimeoutError:
-                        if DEBUG: print "Timeout sending message to MQ"
-        beat.sleep()
+def on_connect(client, userdata, flags, rc):
+    """Send data once when connected connection
+    """
+    print("Connection returned result: " + str(rc) )
+    value = 42
+    data = {"state": {"reported": {"reading": value}}}
+    mqttc.publish("$aws/things/{}/shadow/update".format(thing_name), json.dumps(data), qos=1)
+    print("msg sent: temperature " + "%.2f" % tempreading )
 
+def set_cred(env_name, file_name):
+    """Turn base64 encoded environmental variable into a certificate file
+    """
+    env = os.getenv(env_name)
+    with open(file_name, "wb") as output_file:
+        output_file.write(base64.b64decode(env))
+
+
+if __name__ == "__main__":
+    # Set up AWS variables
+    awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
+    awsport = os.getenv("AWS_PORT", 8883)
+    thing_name = os.getenv("UUID")
+
+    # Set up key files
+    key_filename = "aws_private_key.key"
+    set_cred("AWS_PRIVATE_KEY", key_filename)
+    cert_filename = "aws_certificate.crt"
+    set_cred("AWS_CERTIFICATE", cert_filename)
+
+    
+    mqttc = paho.Client()
+    mqttc.on_connect = on_connect
+    
+    mqttc.tls_set(certifi.where(),
+                  certfile=cert_filename,
+                  keyfile=key_filename,
+                  cert_reqs=ssl.CERT_REQUIRED,
+                  tls_version=ssl.PROTOCOL_TLSv1_2,
+                  ciphers=None)
+    
+    mqttc.connect(awshost, awsport, keepalive=60)
+    mqttc.loop_forever()
 
 
 

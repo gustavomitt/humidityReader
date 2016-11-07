@@ -1,20 +1,11 @@
-FROM resin/rpi-raspbian
+FROM resin/raspberrypi3-python:latest
 
-# Sets the Application Default Credentials
-
-# ENV GOOGLE_APPLICATION_CREDENTIALS /home/dockervolume/GardenControlArduino-75b43a070e42.json
-
-# Install python, pip and git
-RUN apt-get update
-RUN apt-get -y install python2.7
-RUN apt-get -y install python-pip
 RUN apt-get -y install git
 
 
 # Install python modules
-# RUN pip install requests
-RUN pip install google-api-python-client
-RUN pip install cronus
+COPY requirements.txt ./
+RUN pip install -r ./requirements.txt
 
 # Clone Rep
 RUN git clone https://github.com/gustavomitt/humidityReader.git /home/humidityReader
