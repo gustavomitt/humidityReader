@@ -6,9 +6,10 @@ import datetime
 import os
 import cronus.beat as beat
 from cronus.timeout import timeout,TimeoutError 
-
 import certifi
 import paho.mqtt.client as paho
+import ssl
+import jason
 
 DEBUG = True
 arduinoIP = os.environ['arduino1']
