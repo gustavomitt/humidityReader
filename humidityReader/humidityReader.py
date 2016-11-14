@@ -77,6 +77,8 @@ if __name__ == "__main__":
     set_cred("AWS_PRIVATE_KEY", key_filename)
     cert_filename = "aws_certificate.crt"
     set_cred("AWS_CERTIFICATE", cert_filename)
+    root_filename = "aws_root.crt"
+    set_cred("AWS_IoT_Root_Certificate", root_filename)
 
     
     mqttc = paho.Client()

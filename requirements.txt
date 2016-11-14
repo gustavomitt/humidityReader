@@ -4,5 +4,6 @@ cronus
 requests
 httplib2
 datetime
-ssh
+ssl
 simplejson
+AWSIoTPythonSDK
