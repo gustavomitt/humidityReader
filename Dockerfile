@@ -1,4 +1,10 @@
+# Test environment:
+#FROM python:2.7
+#
+
+# Prodution environment:
 FROM resin/raspberrypi3-python:latest
+#
 
 RUN apt-get -y install git
 
