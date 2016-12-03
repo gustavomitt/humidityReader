@@ -56,7 +56,7 @@ def on_connect(client, userdata, flags, rc):
     value = 42
     data = {"state": {"reported": {"reading": value}}}
     mqttc.publish("$aws/things/{}/shadow/update".format(thing_name), json.dumps(data), qos=1)
-    print("msg sent: temperature " + "%.2f" % tempreading )
+#    print("msg sent: temperature " + "%.2f" % tempreading )
 
 def set_cred(env_name, file_name):
     """Turn base64 encoded environmental variable into a certificate file
