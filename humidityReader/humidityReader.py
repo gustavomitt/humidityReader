@@ -116,15 +116,16 @@ if __name__ == "__main__":
     beat.set_rate(0.016666667)
     
     # Publish to the same topic in a loop forever
-    while beat.true():
+#    while beat.true():
+    while True:
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
             print "Timeout error reading arduino humidity sensor"
         else:
             myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
-        beat.sleep()
-
+#        beat.sleep()
+        time.sleep(60)
 #     mqttc = paho.Client()
 #     mqttc.on_connect = on_connect
 #     
