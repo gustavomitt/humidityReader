@@ -116,7 +116,7 @@ if __name__ == "__main__":
     beat.set_rate(0.016666667)
     
     # Publish to the same topic in a loop forever
-    while True:
+    while beat.true():
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
