@@ -10,10 +10,23 @@ import certifi
 import paho.mqtt.client as paho
 import ssl
 import json
+import sys
+import logging
+import time
+import getopt
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+
 
 DEBUG = True
 arduinoIP = os.environ['arduino1']
 
+# Custom MQTT message callback
+def customCallback(client, userdata, message):
+    print("Received a new message: ")
+    print(message.payload)
+    print("from topic: ")
+    print(message.topic)
+    print("--------------\n\n")
 
 
 @timeout(10)
@@ -67,6 +80,15 @@ def set_cred(env_name, file_name):
 
 
 if __name__ == "__main__":
+    
+    # Configure logging
+    logger = logging.getLogger("AWSIoTPythonSDK.core")
+    logger.setLevel(logging.DEBUG)
+    streamHandler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(streamHandler)
+
     # Set up AWS variables
     awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
     awsport = os.getenv("AWS_PORT", 8883)
@@ -80,19 +102,41 @@ if __name__ == "__main__":
     root_filename = "aws_root.crt"
     set_cred("AWS_IoT_Root_Certificate", root_filename)
 
+    myAWSIoTMQTTClient = AWSIoTMQTTClient("basicPubSub")
+    myAWSIoTMQTTClient.configureEndpoint(host, 8883)
+    myAWSIoTMQTTClient.configureCredentials(root_filename, key_filename, cert_filename)
     
-    mqttc = paho.Client()
-    mqttc.on_connect = on_connect
+    # AWSIoTMQTTClient connection configuration
+    myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
+    myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
+    myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
+    myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
+    myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
+
+    # Connect and subscribe to AWS IoT
+    myAWSIoTMQTTClient.connect()
+    myAWSIoTMQTTClient.subscribe("sdk/test/Python", 1, customCallback)
+    time.sleep(2)
     
-    mqttc.tls_set(certifi.where(),
-                  certfile=cert_filename,
-                  keyfile=key_filename,
-                  cert_reqs=ssl.CERT_REQUIRED,
-                  tls_version=ssl.PROTOCOL_TLSv1_2,
-                  ciphers=None)
-    
-    mqttc.connect(awshost, awsport, keepalive=60)
-    mqttc.loop_forever()
+    # Publish to the same topic in a loop forever
+    loopCount = 0
+    while True:
+        myAWSIoTMQTTClient.publish("sdk/test/Python", "New Message " + str(loopCount), 1)
+        loopCount += 1
+        time.sleep(1)
+
+#     mqttc = paho.Client()
+#     mqttc.on_connect = on_connect
+#     
+#     mqttc.tls_set(certifi.where(),
+#                   certfile=cert_filename,
+#                   keyfile=key_filename,
+#                   cert_reqs=ssl.CERT_REQUIRED,
+#                   tls_version=ssl.PROTOCOL_TLSv1_2,
+#                   ciphers=None)
+#     
+#     mqttc.connect(awshost, awsport, keepalive=60)
+#     mqttc.loop_forever()
 
 
 
