@@ -33,7 +33,7 @@ def customCallback(client, userdata, message):
 def getSensorValue(IP):
     try:
         if DEBUG: print "Sending http request to arduino"
-        response = requests.get("http://" + arduinoIP + "/")
+        response = requests.get("http://" + IP + "/")
     except requests.exceptions.RequestException as e:
         if DEBUG : print e
         return None
@@ -55,11 +55,6 @@ def formatMessage(arduinoResponse):
     }
     return body
 
-@timeout(10)
-def writeMessageToMQ(message,client):
-    # Send the humidity value to message queue
-    resp = client.projects().topics().publish(
-        topic='projects/gardencontrolarduino/topics/humidity', body=message).execute()
 
 
 def on_connect(client, userdata, flags, rc):
@@ -115,15 +110,14 @@ if __name__ == "__main__":
 
     # Connect and subscribe to AWS IoT
     myAWSIoTMQTTClient.connect()
-    myAWSIoTMQTTClient.subscribe("sdk/test/Python", 1, customCallback)
+    myAWSIoTMQTTClient.subscribe("vase1/humidity", 1, customCallback)
     time.sleep(2)
     
     # Publish to the same topic in a loop forever
-    loopCount = 0
     while True:
-        myAWSIoTMQTTClient.publish("sdk/test/Python", "New Message " + str(loopCount), 1)
-        loopCount += 1
-        time.sleep(1)
+        humidity = getSensorValue(arduinoIP)
+        myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
+        time.sleep(60)
 
 #     mqttc = paho.Client()
 #     mqttc.on_connect = on_connect
