@@ -4,6 +4,5 @@ cronus
 requests
 httplib2
 datetime
-ssl
 simplejson
 AWSIoTPythonSDK

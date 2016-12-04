@@ -103,7 +103,7 @@ if __name__ == "__main__":
     set_cred("AWS_IoT_Root_Certificate", root_filename)
 
     myAWSIoTMQTTClient = AWSIoTMQTTClient("basicPubSub")
-    myAWSIoTMQTTClient.configureEndpoint(host, 8883)
+    myAWSIoTMQTTClient.configureEndpoint(awshost, 8883)
     myAWSIoTMQTTClient.configureCredentials(root_filename, key_filename, cert_filename)
     
     # AWSIoTMQTTClient connection configuration
