@@ -29,7 +29,7 @@ def customCallback(client, userdata, message):
     print("--------------\n\n")
 
 
-@timeout(10)
+#@timeout(10)
 def getSensorValue(IP):
     try:
         if DEBUG: print "Sending http request to arduino"
@@ -42,7 +42,7 @@ def getSensorValue(IP):
         return response
     ##    sys.exit()
 
-@timeout(3)
+#@timeout(3)
 def formatMessage(arduinoResponse):
     resp = arduinoResponse.json()
     humidity = resp['variables']['humidity']
@@ -116,16 +116,16 @@ if __name__ == "__main__":
     beat.set_rate(0.016666667)
     
     # Publish to the same topic in a loop forever
-#    while beat.true():
-    while True:
+    while beat.true():
+#    while True:
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
             print "Timeout error reading arduino humidity sensor"
         else:
             myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
-#        beat.sleep()
-        time.sleep(60)
+        beat.sleep()
+#        time.sleep(60)
 #     mqttc = paho.Client()
 #     mqttc.on_connect = on_connect
 #     
