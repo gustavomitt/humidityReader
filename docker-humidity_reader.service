@@ -5,7 +5,7 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=~/runHumidityReader.sh
+ExecStart=/home/pi/runHumidityReader.sh
 ExecStop=/usr/bin/docker stop $(docker ps | grep gustavomitt/humidityreader:latest)
 
 [Install]

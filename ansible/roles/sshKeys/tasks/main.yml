@@ -1,0 +1,10 @@
+---
+- name: Copy keys
+  copy: 
+    src={{ local_home }}/.ssh/algarServicos.pub 
+    dest={{ home }}/.ssh/id_rsa.pub
+    owner={{ ansible_user }}
+    group={{ ansible_user_gid }}
+    mode="u+rw,g-rwx,o-rwx"
+
+
