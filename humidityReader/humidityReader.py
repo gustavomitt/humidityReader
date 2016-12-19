@@ -123,8 +123,9 @@ if __name__ == "__main__":
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
-            print "Timeout error reading arduino humidity sensor"
+            logger.error("Timeout error reading arduino humidity sensor")
         else:
+            logger.debug("Trying to send humidity to AWS")
             myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
         beat.sleep()
 #        time.sleep(60)
