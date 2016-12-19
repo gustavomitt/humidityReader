@@ -4,16 +4,8 @@
     repo=https://github.com/gustavomitt/humidityReader.git
     dest={{ home }}/humidityReader
 
-- name: Install python dependencies
-  pip: name={{ item }}
-  become: yes
-  with_items:
-    - html5lib
-    - requests
-    - AWSIoTPythonSDK
-    - cronus
-    - paho
-    - ssl
-    - json
-
+- name: Build Humidity Reader image
+  docker_image:
+    path: "{{ home }}/humidityReader"
+    name: gustavomitt/humidityreader:latest
 
