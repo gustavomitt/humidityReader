@@ -15,30 +15,32 @@ import logging
 import time
 import getopt
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+import logging
 
 
-DEBUG = True
+
 arduinoIP = os.environ['arduino1']
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
-    print("Received a new message: ")
-    print(message.payload)
-    print("from topic: ")
-    print(message.topic)
-    print("--------------\n\n")
+    logger.info("Received a new message: ")
+    logger.info(message.payload)
+    logger.info("from topic: ")
+    logger.info(message.topic)
+    logger.info("--------------\n\n")
 
 
 #@timeout(10)
 def getSensorValue(IP):
     try:
-        if DEBUG: print "Sending http request to arduino"
+        logger.info("Sending http request to arduino")
         response = requests.get("http://" + IP + "/")
     except requests.exceptions.RequestException as e:
-        if DEBUG : print e
+        logger.error("Failed to get request from arduino: %s",e)
         return None
     else:
-        if DEBUG: print response.json()
+        logger.info("Got response from arduino")
+        logger.debug("Response received: %s",response.json())
         return response
     ##    sys.exit()
 
@@ -46,7 +48,7 @@ def getSensorValue(IP):
 def formatMessage(arduinoResponse):
     resp = arduinoResponse.json()
     humidity = resp['variables']['humidity']
-    if DEBUG: print "Collected humidity value: " + str(humidity)
+    logger.debug("Collected humidity value: %s",str(humidity))
     message1 = base64.b64encode(str(humidity))
     body = {
         'messages': [
@@ -60,7 +62,7 @@ def formatMessage(arduinoResponse):
 def on_connect(client, userdata, flags, rc):
     """Send data once when connected connection
     """
-    print("Connection returned result: " + str(rc) )
+    logger.info("Connection returned result: %s",str(rc) )
     value = 42
     data = {"state": {"reported": {"reading": value}}}
     mqttc.publish("$aws/things/{}/shadow/update".format(thing_name), json.dumps(data), qos=1)
