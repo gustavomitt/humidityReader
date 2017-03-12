@@ -6,28 +6,28 @@ import datetime
 import os
 import cronus.beat as beat
 from cronus.timeout import timeout,TimeoutError 
-import certifi
-import paho.mqtt.client as paho
+#import certifi
+#import paho.mqtt.client as paho
 import ssl
 import json
 import sys
 import logging
 import time
 import getopt
-from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
-import logging
+#from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+import thingspeak
 
 
 
 arduinoIP = os.environ['arduino1']
 
 # Custom MQTT message callback
-def customCallback(client, userdata, message):
-    logger.info("Received a new message: ")
-    logger.info(message.payload)
-    logger.info("from topic: ")
-    logger.info(message.topic)
-    logger.info("--------------\n\n")
+#def customCallback(client, userdata, message):
+#    logger.info("Received a new message: ")
+#    logger.info(message.payload)
+#    logger.info("from topic: ")
+#    logger.info(message.topic)
+#    logger.info("--------------\n\n")
 
 
 #@timeout(10)
@@ -79,42 +79,48 @@ def set_cred(env_name, file_name):
 if __name__ == "__main__":
     
     # Configure logging
-    logger = logging.getLogger("AWSIoTPythonSDK.core")
-    logger.setLevel(logging.DEBUG)
-    streamHandler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    streamHandler.setFormatter(formatter)
-    logger.addHandler(streamHandler)
+    #logger = logging.getLogger("AWSIoTPythonSDK.core")
+    #logger.setLevel(logging.DEBUG)
+    #streamHandler = logging.StreamHandler()
+    #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    #streamHandler.setFormatter(formatter)
+    #logger.addHandler(streamHandler)
 
     # Set up AWS variables
-    awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
-    awsport = os.getenv("AWS_PORT", 8883)
-    thing_name = os.getenv("UUID")
+    #awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
+    #awsport = os.getenv("AWS_PORT", 8883)
+    #thing_name = os.getenv("UUID")
 
     # Set up key files
-    key_filename = "aws_private_key.key"
-    set_cred("AWS_PRIVATE_KEY", key_filename)
-    cert_filename = "aws_certificate.crt"
-    set_cred("AWS_CERTIFICATE", cert_filename)
-    root_filename = "aws_root.crt"
-    set_cred("AWS_IoT_Root_Certificate", root_filename)
+    #key_filename = "aws_private_key.key"
+    #set_cred("AWS_PRIVATE_KEY", key_filename)
+    #cert_filename = "aws_certificate.crt"
+    #set_cred("AWS_CERTIFICATE", cert_filename)
+    #root_filename = "aws_root.crt"
+    #set_cred("AWS_IoT_Root_Certificate", root_filename)
 
-    myAWSIoTMQTTClient = AWSIoTMQTTClient("basicPubSub")
-    myAWSIoTMQTTClient.configureEndpoint(awshost, 8883)
-    myAWSIoTMQTTClient.configureCredentials(root_filename, key_filename, cert_filename)
+    #myAWSIoTMQTTClient = AWSIoTMQTTClient("basicPubSub")
+    #myAWSIoTMQTTClient.configureEndpoint(awshost, 8883)
+    #myAWSIoTMQTTClient.configureCredentials(root_filename, key_filename, cert_filename)
     
     # AWSIoTMQTTClient connection configuration
-    myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
-    myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
-    myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
-    myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
-    myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
+    #myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
+    #myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
+    #myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
+    #myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
+    #myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
 
     # Connect and subscribe to AWS IoT
-    myAWSIoTMQTTClient.connect()
-    myAWSIoTMQTTClient.subscribe("vase1/humidity", 1, customCallback)
-    time.sleep(2)
+    #myAWSIoTMQTTClient.connect()
+    #myAWSIoTMQTTClient.subscribe("vase1/humidity", 1, customCallback)
+    #time.sleep(2)
     
+    # Set up ThingSpeak
+    
+    api_key = os.getenv("THINGSPEAK_API_KEY")
+    channel_id = os.getenv("THINGSPEAK_CHANNEL_ID")
+    channel = thingspeak.Channel(channel_id,'api_key={api}'.format(api=api_key))    
+
     beat.set_rate(0.016666667)
     
     # Publish to the same topic in a loop forever
@@ -123,10 +129,14 @@ if __name__ == "__main__":
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
-            logger.error("Timeout error reading arduino humidity sensor")
+            #logger.error("Timeout error reading arduino humidity sensor")
         else:
-            logger.debug("Trying to send humidity to AWS")
-            myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
+            #logger.debug("Trying to send humidity to AWS")
+            #myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
+            data = {}
+            data['api_key'] = api_key
+            data['field1'] = humidity
+            channel.update(data)
         beat.sleep()
 #        time.sleep(60)
 #     mqttc = paho.Client()
