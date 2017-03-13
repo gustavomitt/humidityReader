@@ -131,8 +131,6 @@ if __name__ == "__main__":
         except TimeoutError:
             #logger.error("Timeout error reading arduino humidity sensor")
         else:
-            #logger.debug("Trying to send humidity to AWS")
-            #myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
             data = {}
             data['api_key'] = api_key
             data['field1'] = humidity
