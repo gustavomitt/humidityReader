@@ -79,12 +79,12 @@ def set_cred(env_name, file_name):
 if __name__ == "__main__":
     
     # Configure logging
-    #logger = logging.getLogger("AWSIoTPythonSDK.core")
-    #logger.setLevel(logging.DEBUG)
-    #streamHandler = logging.StreamHandler()
-    #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    #streamHandler.setFormatter(formatter)
-    #logger.addHandler(streamHandler)
+    logger = logging.getLogger("AWSIoTPythonSDK.core")
+    logger.setLevel(logging.DEBUG)
+    streamHandler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(streamHandler)
 
     # Set up AWS variables
     #awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
@@ -129,8 +129,11 @@ if __name__ == "__main__":
         try:
             humidity = getSensorValue(arduinoIP)
         except TimeoutError:
-            #logger.error("Timeout error reading arduino humidity sensor")
+            pass
+            logger.error("Timeout error reading arduino humidity sensor")
         else:
+            logger.debug("Trying to send humidity to AWS")
+            #myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
             data = {}
             data['api_key'] = api_key
             data['field1'] = humidity
@@ -149,10 +152,5 @@ if __name__ == "__main__":
 #     
 #     mqttc.connect(awshost, awsport, keepalive=60)
 #     mqttc.loop_forever()
-
-
-
-
-
 
 

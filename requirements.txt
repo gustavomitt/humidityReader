@@ -1,9 +1,6 @@
-paho-mqtt
-certifi
 cronus
 requests
 httplib2
 datetime
 simplejson
-AWSIoTPythonSDK
 thingspeak
