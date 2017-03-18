@@ -79,7 +79,7 @@ def set_cred(env_name, file_name):
 if __name__ == "__main__":
     
     # Configure logging
-    logger = logging.getLogger("AWSIoTPythonSDK.core")
+    logger = logging.getLogger("humidityReader")
     logger.setLevel(logging.DEBUG)
     streamHandler = logging.StreamHandler()
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -132,7 +132,7 @@ if __name__ == "__main__":
             pass
             logger.error("Timeout error reading arduino humidity sensor")
         else:
-            logger.debug("Trying to send humidity to AWS")
+            logger.debug("Trying to send humidity to ThingSpeak")
             #myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
             data = {}
             data['api_key'] = api_key
