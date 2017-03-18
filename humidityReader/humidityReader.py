@@ -45,17 +45,15 @@ def getSensorValue(IP):
     ##    sys.exit()
 
 #@timeout(3)
-def formatMessage(arduinoResponse):
+def formatMessage(arduinoResponse,api_key):
     resp = arduinoResponse.json()
     humidity = resp['variables']['humidity']
     logger.debug("Collected humidity value: %s",str(humidity))
-    message1 = base64.b64encode(str(humidity))
-    body = {
-        'messages': [
-            {'data': message1},
-        ]
-    }
-    return body
+    #message1 = base64.b64encode(str(humidity))
+    data = {}
+    data['api_key'] = api_key
+    data['field1'] = humidity
+    return data
 
 
 
@@ -85,6 +83,7 @@ if __name__ == "__main__":
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     streamHandler.setFormatter(formatter)
     logger.addHandler(streamHandler)
+    logger.debug("Logger initialized")
 
     # Set up AWS variables
     #awshost = os.getenv("AWS_HOST", "data.iot.us-east-1.amazonaws.com")
@@ -134,10 +133,7 @@ if __name__ == "__main__":
         else:
             logger.debug("Trying to send humidity to ThingSpeak")
             #myAWSIoTMQTTClient.publish("vase1/humidity", str(humidity), 1)
-            data = {}
-            data['api_key'] = api_key
-            data['field1'] = humidity
-            channel.update(data)
+            channel.update(formatMessage(humidity,api_key))
         beat.sleep()
 #        time.sleep(60)
 #     mqttc = paho.Client()
