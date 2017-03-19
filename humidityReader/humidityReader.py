@@ -19,7 +19,7 @@ def getSecret(name):
     path = 'run/secrets/' + name
     with open(path, 'r') as f:
         secret = f.readline()
-    return secret
+    return secret.rstrip()
 
 #@timeout(10)
 def getSensorValue(IP):
